@@ -11,6 +11,8 @@ let userjsUtils = ChromeUtils.importESModule(
   "resource:///modules/userjsUtils.sys.mjs",
 );
 
+var BrowserFunctions = ChromeUtils.importESModule("resource:///modules/BrowserFunctions.sys.mjs");
+
 let l10n = new Localization(["browser/floorp.ftl"], true);
 
 XPCOMUtils.defineLazyGetter(this, "L10n", () => {
@@ -33,24 +35,7 @@ const gUserjsPane = {
         continue;
       }
       needreboot[i].setAttribute("rebootELIsSet", "true");
-      needreboot[i].addEventListener("click", function () {
-        if (!Services.prefs.getBoolPref("floorp.enable.auto.restart", false)) {
-          (async () => {
-            let userConfirm = await confirmRestartPrompt(null);
-            if (userConfirm == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
-              Services.startup.quit(
-                Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart,
-              );
-            }
-          })();
-        } else {
-          window.setTimeout(function () {
-            Services.startup.quit(
-              Services.startup.eAttemptQuit | Services.startup.eRestart,
-            );
-          }, 500);
-        }
-      });
+      needreboot[i].addEventListener("click", BrowserFunctions.autoRestart);
     }
 
     let buttons = document.getElementsByClassName("apply-userjs-button");

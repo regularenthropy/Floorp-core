@@ -18,6 +18,7 @@ DIRS += [
 ]
 
 EXTRA_JS_MODULES += [
+    "BrowserFunctions.sys.mjs",
     "BrowserManagerSidebar.sys.mjs",
     "CustomKeyboardShortcutUtils.sys.mjs",
     "DesktopFileParser.sys.mjs",

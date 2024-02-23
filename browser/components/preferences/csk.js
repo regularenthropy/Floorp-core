@@ -2,6 +2,7 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
+var BrowserFunctions = ChromeUtils.importESModule("resource:///modules/BrowserFunctions.sys.mjs");
 
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm",
@@ -32,24 +33,7 @@ const gCSKPane = {
         continue;
       }
       needreboot[i].setAttribute("rebootELIsSet", "true");
-      needreboot[i].addEventListener("click", function () {
-        if (!Services.prefs.getBoolPref("floorp.enable.auto.restart", false)) {
-          (async () => {
-            let userConfirm = await confirmRestartPrompt(null);
-            if (userConfirm == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
-              Services.startup.quit(
-                Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart,
-              );
-            }
-          })();
-        } else {
-          window.setTimeout(function () {
-            Services.startup.quit(
-              Services.startup.eAttemptQuit | Services.startup.eRestart,
-            );
-          }, 500);
-        }
-      });
+      needreboot[i].addEventListener("click", BrowserFunctions.autoRestart);
     }
 
     const utils = CustomKeyboardShortcutUtils.keyboradShortcutFunctions;

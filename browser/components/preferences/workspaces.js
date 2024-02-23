@@ -40,24 +40,7 @@ const gWorkspacesPane = {
         continue;
       }
       needreboot[i].setAttribute("rebootELIsSet", "true");
-      needreboot[i].addEventListener("click", function () {
-        if (!Services.prefs.getBoolPref("floorp.enable.auto.restart", false)) {
-          (async () => {
-            let userConfirm = await confirmRestartPrompt(null);
-            if (userConfirm == CONFIRM_RESTART_PROMPT_RESTART_NOW) {
-              Services.startup.quit(
-                Ci.nsIAppStartup.eAttemptQuit | Ci.nsIAppStartup.eRestart,
-              );
-            }
-          })();
-        } else {
-          window.setTimeout(function () {
-            Services.startup.quit(
-              Services.startup.eAttemptQuit | Services.startup.eRestart,
-            );
-          }, 500);
-        }
-      });
+      needreboot[i].addEventListener("click", BrowserFunctions.autoRestart);
     }
   },
 };
